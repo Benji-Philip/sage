@@ -9,7 +9,6 @@ void main() {
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -26,7 +25,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: const HomePage(),
       theme: lightMode,
-      darkTheme: darkMode,
+      darkTheme: lightMode,
     );
   }
 }
