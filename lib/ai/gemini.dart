@@ -5,7 +5,7 @@ import 'package:sage/database/data/settings_database.dart';
 class GeminiApi {
   Future<String> promptGeminiText(String prompt, WidgetRef ref) async {
     final model = GenerativeModel(
-      model: 'gemini-1.5-flash-latest',
+      model: 'gemini-1.5-pro-latest',
       apiKey: ref.read(settingsDatabaseProvider)[0].value,
     );
     final content = [Content.text(prompt)];

@@ -51,7 +51,7 @@ class AiController {
   Future<String> refactorHistory(
       WidgetRef ref, Patient patient) async {
         String aiModel = ref.read(settingsDatabaseProvider)[2].value;
-    String prompt = "The history for a patient is as follows : ${patient.hopi}. Refactor the given patient history under seperate headings like you would see in hospital casesheets, as points in plain text and not in markdown. Only refactor the given history into what doctors would write in patient casesheets";
+    String prompt = "The history for a patient is as follows : ${patient.hopi}. Refactor the given patient history under seperate headings like you would see in hospital casesheets, under points in plain text and not in markdown. Only refactor the given history into what doctors would write in patient casesheets";
     if (aiModel == "gemini") {
       String response = await GeminiApi().promptGeminiText(prompt, ref);
       return response;
