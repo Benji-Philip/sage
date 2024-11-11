@@ -13,6 +13,7 @@ dependencies:
   chat_gpt_sdk: ^3.1.0
   flutter:
     sdk: flutter
+  flutter_displaymode: ^0.6.0
   flutter_localizations:
     sdk: flutter
   google_generative_ai: ^0.4.6
