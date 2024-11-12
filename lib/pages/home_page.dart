@@ -26,6 +26,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   final TextEditingController searchTEC = TextEditingController();
 
   @override
+  void dispose() {
+    searchFocusNode.dispose();
+    searchTEC.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool updateThisSearch = ref.read(updateSearch);
     List<Patient> patients = ref.watch(patientDatabaseProvider);
