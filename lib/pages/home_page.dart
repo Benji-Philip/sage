@@ -12,11 +12,22 @@ import 'package:sage/database/test_data/temporary_patient.dart';
 import 'package:sage/layouts/base_layout.dart';
 import 'package:sage/pages/add_patient_page.dart';
 
-class HomePage extends ConsumerWidget {
+final updateSearch = StateProvider((state) => true);
+
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-  TextEditingController searchTEC = TextEditingController();
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  final FocusNode searchFocusNode = FocusNode();
+  final TextEditingController searchTEC = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    bool updateThisSearch = ref.read(updateSearch);
     List<Patient> patients = ref.watch(patientDatabaseProvider);
     double screenWidth = MediaQuery.of(context).size.width;
     return BaseLayout(
@@ -92,35 +103,48 @@ class HomePage extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 18.0, top: 10),
-                child: Searchbar(screenWidth: screenWidth, searchTEC: searchTEC,onChanged: (p0) {
-                  
-                },),
+                child: Searchbar(
+                  searchFocusNode: searchFocusNode,
+                  screenWidth: screenWidth,
+                  searchTEC: searchTEC,
+                  onChanged: (value) {
+                    patients = ref
+                        .read(patientDatabaseProvider.notifier)
+                        .searchPatients(value);
+                    ref
+                        .read(updateSearch.notifier)
+                        .update((state) => !updateThisSearch);
+                  },
+                ),
               ),
             ],
           ),
         ),
-        SliverList.builder(
-            itemCount: patients.length,
-            itemBuilder: (context, index) {
-              return PatientCard(
-                  patient: Patient(
-                      patients[index].id,
-                      patients[index].tags,
-                      patients[index].name,
-                      patients[index].age,
-                      patients[index].ageUnit,
-                      patients[index].sex,
-                      patients[index].occupation,
-                      patients[index].address,
-                      patients[index].chiefComplaints,
-                      patients[index].hopi,
-                      patients[index].examinations,
-                      patients[index].diagnoses,
-                      patients[index].summaryOfHopi,
-                      patients[index].suggestedQuestions,
-                      patients[index].previousSaves,
-                      patients[index].suggestedTreatment));
-            }),
+        Consumer(builder: (context, ref, child) {
+          updateThisSearch = ref.watch(updateSearch);
+          return SliverList.builder(
+              itemCount: patients.length,
+              itemBuilder: (context, index) {
+                return PatientCard(
+                    patient: Patient(
+                        patients[index].id,
+                        patients[index].tags,
+                        patients[index].name,
+                        patients[index].age,
+                        patients[index].ageUnit,
+                        patients[index].sex,
+                        patients[index].occupation,
+                        patients[index].address,
+                        patients[index].chiefComplaints,
+                        patients[index].hopi,
+                        patients[index].examinations,
+                        patients[index].diagnoses,
+                        patients[index].summaryOfHopi,
+                        patients[index].suggestedQuestions,
+                        patients[index].previousSaves,
+                        patients[index].suggestedTreatment));
+              });
+        }),
         const SliverToBoxAdapter(
           child: SizedBox(
             height: 100,

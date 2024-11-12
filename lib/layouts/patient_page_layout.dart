@@ -16,64 +16,65 @@ import 'package:sage/database/test_data/temporary_patient.dart';
 import 'package:sage/json_processing/json_processor.dart';
 import 'package:sage/layouts/base_layout.dart';
 
+final updateTagsListUi = StateProvider((ref) => true);
+
 class PatientPageLayout extends ConsumerStatefulWidget {
   final bool forEditing;
   const PatientPageLayout({super.key, required this.forEditing});
-
   @override
   ConsumerState<PatientPageLayout> createState() => _PatientPageLayoutState();
 }
 
 class _PatientPageLayoutState extends ConsumerState<PatientPageLayout> {
+  final TextEditingController tagsTEC = TextEditingController();
+  final TextEditingController nameTEC = TextEditingController();
+  final TextEditingController ageTEC = TextEditingController();
+  final TextEditingController occupationTEC = TextEditingController();
+  final TextEditingController addressTEC = TextEditingController();
+  final TextEditingController chiefComplaintsTEC = TextEditingController();
+  final TextEditingController hopiTEC = TextEditingController();
+  final TextEditingController examinationsTEC = TextEditingController();
+  final TextEditingController diagnosesTEC = TextEditingController();
+  final TextEditingController summaryTEC = TextEditingController();
+  final TextEditingController suggestedQuestionsTEC = TextEditingController();
+  final TextEditingController suggestedTreatmentTEC = TextEditingController();
+  final FocusNode cCFN = FocusNode();
+  final FocusNode hopiFN = FocusNode();
+  final FocusNode examFN = FocusNode();
+  final FocusNode diagnosesFN = FocusNode();
+  final FocusNode sQFN = FocusNode();
+  final FocusNode summaryFN = FocusNode();
+  final FocusNode treatmentFN = FocusNode();
   final formKey = GlobalKey<FormState>();
-
+  
   @override
   Widget build(BuildContext context) {
-    TextEditingController tagsTEC = TextEditingController();
-    FocusNode cCFN = FocusNode();
-    FocusNode hopiFN = FocusNode();
-    FocusNode examFN = FocusNode();
-    FocusNode diagnosesFN = FocusNode();
-    FocusNode sQFN = FocusNode();
-    FocusNode summaryFN = FocusNode();
-    FocusNode treatmentFN = FocusNode();
     double width = MediaQuery.of(context).size.width;
     StateProvider<Patient> patientProvider = temporaryPatient;
     Patient patient = ref.read(patientProvider);
     ObjectId id = widget.forEditing ? patient.id : ObjectId();
     List<String> tags = JsonProcessor().jsonToTags(patient.tags);
-    TextEditingController nameTEC = TextEditingController();
     String name = patient.name;
     nameTEC.text = name;
-    TextEditingController ageTEC = TextEditingController();
     double age = patient.age;
     ageTEC.text = age.toStringAsFixed(0);
-    TextEditingController occupationTEC = TextEditingController();
     String occupation = patient.occupation;
     occupationTEC.text = occupation;
-    TextEditingController addressTEC = TextEditingController();
     String address = patient.address;
     addressTEC.text = address;
-    TextEditingController chiefComplaintsTEC = TextEditingController();
     String chiefComplaints = patient.chiefComplaints;
     chiefComplaintsTEC.text = chiefComplaints;
-    TextEditingController hopiTEC = TextEditingController();
     String hopi = patient.hopi;
     hopiTEC.text = hopi;
-    TextEditingController examinationsTEC = TextEditingController();
     String examinations = patient.examinations;
     examinationsTEC.text = examinations;
-    TextEditingController diagnosesTEC = TextEditingController();
     String diagnoses = patient.diagnoses;
-    diagnosesTEC.text = diagnoses;
-    TextEditingController summaryTEC = TextEditingController();
+    diagnosesTEC.text = diagnoses; 
     String summaryOfHopi = patient.summaryOfHopi;
     summaryTEC.text = summaryOfHopi;
-    TextEditingController suggestedQuestionsTEC = TextEditingController();
     String suggestedQuestions = patient.suggestedQuestions;
     suggestedQuestionsTEC.text = suggestedQuestions;
     String previousSaves = patient.previousSaves;
-    TextEditingController suggestedTreatmentTEC = TextEditingController();
     String suggestedTreatment = patient.suggestedTreatment;
     suggestedTreatmentTEC.text = suggestedTreatment;
 
@@ -589,10 +590,10 @@ class _PatientPageLayoutState extends ConsumerState<PatientPageLayout> {
                         visible: widget.forEditing,
                         child: InputBox(
                           buttonOneIcon: Icon(
-                                      Icons.generating_tokens_outlined,
-                                      color: Theme.of(context).colorScheme.tertiary,
-                                      size: 20,
-                                    ),
+                            Icons.generating_tokens_outlined,
+                            color: Theme.of(context).colorScheme.tertiary,
+                            size: 20,
+                          ),
                           focusNode: hopiFN,
                           onButtonOneTap: () async {
                             HapticFeedback.lightImpact();
@@ -613,10 +614,10 @@ class _PatientPageLayoutState extends ConsumerState<PatientPageLayout> {
                           validator: (value) {
                             if (widget.forEditing) {
                               if (value == null ||
-                                value.isEmpty ||
-                                value.trim() == "") {
-                              return '*';
-                            }
+                                  value.isEmpty ||
+                                  value.trim() == "") {
+                                return '*';
+                              }
                             }
                             return null;
                           },
@@ -627,14 +628,15 @@ class _PatientPageLayoutState extends ConsumerState<PatientPageLayout> {
                         visible: widget.forEditing,
                         child: InputBox(
                           buttonOneIcon: Icon(
-                                      Icons.generating_tokens_outlined,
-                                      color: Theme.of(context).colorScheme.tertiary,
-                                      size: 20,
-                                    ),
+                            Icons.generating_tokens_outlined,
+                            color: Theme.of(context).colorScheme.tertiary,
+                            size: 20,
+                          ),
                           focusNode: examFN,
                           onButtonOneTap: () async {
                             HapticFeedback.lightImpact();
-                            examinationsTEC.text="refactoring examinations........";
+                            examinationsTEC.text =
+                                "refactoring examinations........";
                             examinationsTEC.text = await AiController()
                                 .refactorExaminations(ref, patient);
                           },
@@ -680,7 +682,8 @@ class _PatientPageLayoutState extends ConsumerState<PatientPageLayout> {
                           focusNode: sQFN,
                           onButtonOneTap: () async {
                             HapticFeedback.lightImpact();
-                            suggestedQuestionsTEC.text = "generating suggested questings..........";
+                            suggestedQuestionsTEC.text =
+                                "generating suggested questings..........";
                             suggestedQuestionsTEC.text = await AiController()
                                 .generateSuggestedQuestions(ref, patient);
                           },
@@ -726,7 +729,8 @@ class _PatientPageLayoutState extends ConsumerState<PatientPageLayout> {
                           focusNode: treatmentFN,
                           onButtonOneTap: () async {
                             HapticFeedback.lightImpact();
-                            suggestedTreatmentTEC.text = "generating suggested treatment/management........";
+                            suggestedTreatmentTEC.text =
+                                "generating suggested treatment/management........";
                             suggestedTreatmentTEC.text = await AiController()
                                 .generateTreatments(ref, patient);
                           },

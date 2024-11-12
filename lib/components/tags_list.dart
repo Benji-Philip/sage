@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final updateTagsListUi = StateProvider((ref) => true);
 final tagsListIndex = StateProvider((ref) => 0);
 
-class TagsList extends ConsumerWidget {
+class TagsList extends ConsumerStatefulWidget {
   final Function()? onTap;
   final Function? onLongPress;
   final Function(String?)? onFieldSubmitted;
@@ -25,16 +24,21 @@ class TagsList extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TagsList> createState() => _TagsListState();
+}
+
+class _TagsListState extends ConsumerState<TagsList> {
+  @override
+  Widget build(BuildContext context) {
     List<Widget> tagsWidgets = List.generate(
-      tags.length,
+      widget.tags.length,
       (int index) => GestureDetector(
-        onTap: onTap,
+        onTap: widget.onTap,
         onLongPress: () {
           HapticFeedback.heavyImpact();
           ref.read(tagsListIndex.notifier).update((state) => index);
-          if (onLongPress != null) {
-            onLongPress!();
+          if (widget.onLongPress != null) {
+            widget.onLongPress!();
           }
         },
         child: Container(
@@ -52,7 +56,7 @@ class TagsList extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
             child: Text(
-              tags[index],
+              widget.tags[index],
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w700),
@@ -64,7 +68,7 @@ class TagsList extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0, left: 2, right: 2),
       child: Wrap(
-          verticalDirection: verticalDirection ?? VerticalDirection.up,
+          verticalDirection: widget.verticalDirection ?? VerticalDirection.up,
           spacing: 6,
           runSpacing: 6,
           direction: Axis.horizontal,
@@ -73,7 +77,7 @@ class TagsList extends ConsumerWidget {
           children: [
             ...tagsWidgets,
             Visibility(
-              visible: ableToAddTag,
+              visible: widget.ableToAddTag,
               child: Container(
                 decoration: BoxDecoration(
                     boxShadow: [
@@ -93,12 +97,12 @@ class TagsList extends ConsumerWidget {
                       const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                   child: IntrinsicWidth(
                     child: TextFormField(
-                      onFieldSubmitted: onFieldSubmitted,
+                      onFieldSubmitted: widget.onFieldSubmitted,
                       decoration: const InputDecoration(
                           isDense: true,
                           border: InputBorder.none,
                           hintText: "+ add tag"),
-                      controller: tagsTEC,
+                      controller: widget.tagsTEC,
                       style: TextStyle(
                           height: 0.70,
                           fontSize: 16,
