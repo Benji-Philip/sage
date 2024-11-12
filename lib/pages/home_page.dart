@@ -16,6 +16,7 @@ class HomePage extends ConsumerWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+  TextEditingController searchTEC = TextEditingController();
     List<Patient> patients = ref.watch(patientDatabaseProvider);
     double screenWidth = MediaQuery.of(context).size.width;
     return BaseLayout(
@@ -91,7 +92,9 @@ class HomePage extends ConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 18.0, top: 10),
-                child: Searchbar(screenWidth: screenWidth),
+                child: Searchbar(screenWidth: screenWidth, searchTEC: searchTEC,onChanged: (p0) {
+                  
+                },),
               ),
             ],
           ),

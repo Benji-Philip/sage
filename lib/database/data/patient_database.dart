@@ -37,6 +37,11 @@ class PatientDataBaseNotifier extends StateNotifier<List<Patient>> {
     return realm.all<Patient>().toList();
   }
 
+  // query by search term, case-insensitive
+  List<Patient> searchPatients (String searchText){
+    return realm.all<Patient>().query('name CONTAINS[c] \$0', ['L']).toList();
+  }
+
   // update
   void updatePatient(Patient patient) {
     realm.write(() {

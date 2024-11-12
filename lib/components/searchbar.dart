@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Searchbar extends StatelessWidget {
+  final TextEditingController searchTEC;
+  final Function(String)? onChanged;
   final double screenWidth;
-  const Searchbar({super.key, required this.screenWidth});
+  const Searchbar({
+    super.key,
+    required this.screenWidth,
+    required this.searchTEC,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +42,21 @@ class Searchbar extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Search",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.primary),
+                    IntrinsicWidth(
+                      child: TextFormField(
+                        onChanged: onChanged,
+                        controller: searchTEC,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Search",hintStyle: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.primary)),
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
                     ),
                     Image(
                       image: const AssetImage(

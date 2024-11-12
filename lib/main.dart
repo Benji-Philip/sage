@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() async {
+  void initState() {
     if (Platform.isAndroid == true) {
       setOptimalDisplayMode();
     }
