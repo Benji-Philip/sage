@@ -26,7 +26,7 @@ class PatientPageLayout extends StatefulWidget {
   State<PatientPageLayout> createState() => _PatientPageLayoutState();
 }
 
-class _PatientPageLayoutState extends State<PatientPageLayout> with AutomaticKeepAliveClientMixin  {
+class _PatientPageLayoutState extends State<PatientPageLayout> {
   final TextEditingController tagsTEC = TextEditingController();
 
   final TextEditingController nameTEC = TextEditingController();
@@ -68,11 +68,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> with AutomaticKee
   final formKey = GlobalKey<FormState>();
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
     StateProvider<Patient> patientProvider = temporaryPatient;
     return Consumer(builder: (context, ref, child) {
       Patient patient = ref.read(patientProvider);
