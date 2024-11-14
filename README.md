@@ -1,8 +1,10 @@
-# **Sage - Your AI-Powered Patient History Assistant**
+# **Sage**
+
+> Your AI-Powered medical assistant
 
 Sage is an AI-powered app designed to assist medical students in taking comprehensive and structured patient histories. It provides guided questions, organizes data efficiently, and helps streamline the clinical assessment process.
 
-## App Features
+## Features
 
 - Generate
     - Diagnoses
@@ -15,6 +17,6 @@ Sage is an AI-powered app designed to assist medical students in taking comprehe
 
 - A completely open source app with a nice UI;
 
-## VISIT FOR MORE INFORMATION:-
+## Visit for more information:-
 
 https://bytesizeben.com/
