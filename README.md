@@ -4,7 +4,7 @@ Sage is an AI-powered app designed to assist medical students in taking comprehe
 
 ## How to get the app?
 
-Download apk from releases or clone and build it yourself using flutter.
+Download the apk from releases or clone and build it yourself using Flutter.
 
 This app was developed and tested on Android. However, since it’s built with Flutter, it can be easily cloned and deployed on other platforms.
 
