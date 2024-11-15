@@ -699,6 +699,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                             Visibility(
                               visible: widget.forEditing,
                               child: InputBox(
+                              hintText: "enter history to be refactored",
                                 buttonOneIcon: Icon(
                                   Icons.generating_tokens_outlined,
                                   color: Theme.of(context).colorScheme.tertiary,
@@ -738,6 +739,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                             Visibility(
                               visible: widget.forEditing,
                               child: InputBox(
+                              hintText: "enter examinations to be refactored",
                                 buttonOneIcon: Icon(
                                   Icons.generating_tokens_outlined,
                                   color: Theme.of(context).colorScheme.tertiary,
@@ -768,6 +770,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                             Visibility(
                               visible: widget.forEditing,
                               child: InputBox(
+                              hintText: "tap button to generate diagnoses",
                                 focusNode: diagnosesFN,
                                 onButtonOneTap: () async {
                                   HapticFeedback.lightImpact();
@@ -799,6 +802,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                             Visibility(
                               visible: widget.forEditing,
                               child: InputBox(
+                              hintText: "tap button to generate suggested questions",
                                 focusNode: sQFN,
                                 onButtonOneTap: () async {
                                   HapticFeedback.lightImpact();
@@ -831,6 +835,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                             Visibility(
                               visible: widget.forEditing,
                               child: InputBox(
+                              hintText: "tap button to generate summary",
                                 focusNode: summaryFN,
                                 onButtonOneTap: () async {
                                   HapticFeedback.lightImpact();
@@ -861,6 +866,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                             Visibility(
                               visible: widget.forEditing,
                               child: InputBox(
+                              hintText: "tap button to generate treatment",
                                 focusNode: treatmentFN,
                                 onButtonOneTap: () async {
                                   HapticFeedback.lightImpact();
