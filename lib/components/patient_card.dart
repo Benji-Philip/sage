@@ -115,12 +115,15 @@ class PatientCard extends ConsumerWidget {
                         padding: const EdgeInsets.only(top: 6.0,bottom: 4),
                         child: Row(
                           children: [
-                            Text(patient.chiefComplaints,
-                                style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w300)),
+                            Container(
+                          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width/1.2),
+                              child: Text(patient.chiefComplaints,
+                                  style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w300)),
+                            ),
                           ],
                         ),
                       ),
