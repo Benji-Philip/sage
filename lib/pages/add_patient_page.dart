@@ -6,6 +6,6 @@ class AddPatientPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PatientPageLayout(forEditing: false,);
+    return const PatientPageLayout(forEditing: false,);
   }
 }

@@ -24,6 +24,17 @@ class PatientDataBaseNotifier extends StateNotifier<List<Patient>> {
     state = fetchPatients().reversed.toList();
   }
 
+  // used to check if the patient details are saved before exit
+  bool areDetailsSaved(){
+    
+    return true;
+  }
+
+  // query a patient
+  Patient? getPatient (ObjectId id){
+    return realm.find<Patient>(id);
+  }
+
   // create
   void createPatient(Patient patient) {
     realm.write(() {
