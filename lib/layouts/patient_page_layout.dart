@@ -17,6 +17,8 @@ import 'package:sage/json_processing/json_processor.dart';
 import 'package:sage/layouts/base_layout.dart';
 
 final updateTagsListUi = StateProvider((ref) => true);
+final updateOnGenerate = StateProvider((ref) => true);
+final includeExaminations = StateProvider((state)=> false);
 
 class PatientPageLayout extends StatefulWidget {
   final bool forEditing;
@@ -210,6 +212,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
               print("notsame");
             }
           }
+          ref.read(includeExaminations.notifier).update((state)=>false);
         },
         child: LayoutBuilder(builder: (contex, constraints) {
           double width = constraints.maxWidth;
@@ -737,176 +740,378 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                                 },
                               ),
                             ),
+                            // include examinations button
+                            Consumer(
+                              builder: (context, ref, child) {
+                                return Visibility(
+                                  visible: ref.watch(includeExaminations) == false && examinationsTEC.text == "" && widget.forEditing,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      HapticFeedback.lightImpact();
+          ref.read(includeExaminations.notifier).update((state)=>true);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Flex(
+                                        direction: Axis.horizontal,
+                                        children: [
+                                          Icon(Icons.add_box_rounded, color: Theme.of(context).colorScheme.primary,),
+                                          const SizedBox(width: 5,),
+                                          Text(
+                                            "Include Examinations (Optional)",
+                                            style: TextStyle(
+                                                color:
+                                                    Theme.of(context).colorScheme.primary,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                            ),
                             // examinations
-                            Visibility(
-                              visible: widget.forEditing,
-                              child: InputBox(
-                                hintColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                hintText: "enter examinations to be refactored",
-                                buttonOneIcon: Icon(
-                                  Icons.generating_tokens_outlined,
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                  size: 20,
+                            Consumer(builder: (context, ref, child) {
+                              // ignore: unused_local_variable
+                              var localvar = ref.watch(updateOnGenerate);
+                              return Visibility(
+                                visible: ref.watch(includeExaminations) == true || examinationsTEC.text != "" && widget.forEditing,
+                                child: InputBox(
+                                  hintColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  hintText:
+                                      "enter examinations to be refactored",
+                                  buttonOneIcon: Icon(
+                                    Icons.generating_tokens_outlined,
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                    size: 20,
+                                  ),
+                                  focusNode: examFN,
+                                  onButtonOneTap: () async {
+                                    HapticFeedback.lightImpact();
+                                    final examinations = examinationsTEC.text;
+                                    examinationsTEC.text =
+                                        "refactoring examinations........";
+                                    examinationsTEC.text = await AiController()
+                                        .refactorExaminations(
+                                            ref, examinations);
+                                  },
+                                  onButtonTwoTap: () {
+                                    HapticFeedback.lightImpact();
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const SettingsDialog();
+                                        });
+                                  },
+                                  title: "Examinations",
+                                  tec: examinationsTEC,
                                 ),
-                                focusNode: examFN,
-                                onButtonOneTap: () async {
-                                  HapticFeedback.lightImpact();
-                                  final examinations = examinationsTEC.text;
-                                  examinationsTEC.text =
-                                      "refactoring examinations........";
-                                  examinationsTEC.text = await AiController()
-                                      .refactorExaminations(ref, examinations);
-                                },
-                                onButtonTwoTap: () {
-                                  HapticFeedback.lightImpact();
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const SettingsDialog();
-                                      });
-                                },
-                                title: "Examinations",
-                                tec: examinationsTEC,
-                              ),
-                            ),
+                              );
+                            }),
+                            // generate button
+                            Consumer(builder: (context, ref, child) {
+                              // ignore: unused_local_variable
+                              var localvar = ref.watch(updateOnGenerate);
+                              return Visibility(
+                                visible: widget.forEditing &&
+                                    diagnosesTEC.text == "",
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () async {
+                                          HapticFeedback.lightImpact();
+                                          diagnosesTEC.text =
+                                              "generating diagnoses.......";
+                                          ref
+                                              .read(updateOnGenerate.notifier)
+                                              .update((state) =>
+                                                  !ref.read(updateOnGenerate));
+                                          diagnosesTEC.text =
+                                              await AiController()
+                                                  .generateDiagnoses(
+                                                      ref,
+                                                      ref
+                                                          .read(patientProvider)
+                                                          .sex,
+                                                      double.parse(ageTEC.text),
+                                                      ref
+                                                          .read(patientProvider)
+                                                          .ageUnit,
+                                                      occupationTEC.text,
+                                                      hopiTEC.text,
+                                                      examinationsTEC.text);
+                                          suggestedQuestionsTEC.text =
+                                              "generating suggested questings..........";
+                                          ref
+                                              .read(updateOnGenerate.notifier)
+                                              .update((state) =>
+                                                  !ref.read(updateOnGenerate));
+                                          suggestedQuestionsTEC.text =
+                                              await AiController()
+                                                  .generateSuggestedQuestions(
+                                                      ref,
+                                                      ref
+                                                          .read(patientProvider)
+                                                          .sex,
+                                                      double.parse(ageTEC.text),
+                                                      ref
+                                                          .read(patientProvider)
+                                                          .ageUnit,
+                                                      occupationTEC.text,
+                                                      hopiTEC.text,
+                                                      examinationsTEC.text);
+                                          suggestedTreatmentTEC.text =
+                                              "generating suggested treatment/management........";
+                                          ref
+                                              .read(updateOnGenerate.notifier)
+                                              .update((state) =>
+                                                  !ref.read(updateOnGenerate));
+                                          suggestedTreatmentTEC.text =
+                                              await AiController()
+                                                  .generateTreatments(
+                                                      ref,
+                                                      ref
+                                                          .read(patientProvider)
+                                                          .sex,
+                                                      double.parse(ageTEC.text),
+                                                      ref
+                                                          .read(patientProvider)
+                                                          .ageUnit,
+                                                      occupationTEC.text,
+                                                      hopiTEC.text,
+                                                      examinationsTEC.text);
+                                          summaryTEC.text =
+                                              "generating summary......";
+                                          ref
+                                              .read(updateOnGenerate.notifier)
+                                              .update((state) =>
+                                                  !ref.read(updateOnGenerate));
+                                          summaryTEC.text = await AiController()
+                                              .generateSummary(
+                                                  ref,
+                                                  ref.read(patientProvider).sex,
+                                                  double.parse(ageTEC.text),
+                                                  ref
+                                                      .read(patientProvider)
+                                                      .ageUnit,
+                                                  occupationTEC.text,
+                                                  hopiTEC.text,
+                                                  examinationsTEC.text);
+                                        },
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(12)),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0, horizontal: 20),
+                                            child: Flex(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              direction: Axis.horizontal,
+                                              children: [
+                                                Text(
+                                                  "Generate",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .surface,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 18),
+                                                ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Icon(
+                                                  Icons.auto_awesome_rounded,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .surface,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
                             // diagnoses
-                            Visibility(
-                              visible: widget.forEditing,
-                              child: InputBox(
-                                hintColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                hintText: "tap button to generate diagnoses",
-                                focusNode: diagnosesFN,
-                                onButtonOneTap: () async {
-                                  HapticFeedback.lightImpact();
-                                  diagnosesTEC.text =
-                                      "generating diagnoses.......";
-                                  diagnosesTEC.text = await AiController()
-                                      .generateDiagnoses(
-                                          ref,
-                                          ref.read(patientProvider).sex,
-                                          double.parse(ageTEC.text),
-                                          ref.read(patientProvider).ageUnit,
-                                          occupationTEC.text,
-                                          hopiTEC.text,
-                                          examinationsTEC.text);
-                                },
-                                onButtonTwoTap: () {
-                                  HapticFeedback.lightImpact();
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const SettingsDialog();
-                                      });
-                                },
-                                title: "Diagnoses",
-                                tec: diagnosesTEC,
-                              ),
-                            ),
+                            Consumer(builder: (context, ref, child) {
+                              // ignore: unused_local_variable
+                              var localvar = ref.watch(updateOnGenerate);
+                              return Visibility(
+                                visible: widget.forEditing &&
+                                    diagnosesTEC.text != "",
+                                child: InputBox(
+                                  hintColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  hintText: "tap button to generate diagnoses",
+                                  focusNode: diagnosesFN,
+                                  onButtonOneTap: () async {
+                                    HapticFeedback.lightImpact();
+                                    diagnosesTEC.text =
+                                        "generating diagnoses.......";
+                                    diagnosesTEC.text = await AiController()
+                                        .generateDiagnoses(
+                                            ref,
+                                            ref.read(patientProvider).sex,
+                                            double.parse(ageTEC.text),
+                                            ref.read(patientProvider).ageUnit,
+                                            occupationTEC.text,
+                                            hopiTEC.text,
+                                            examinationsTEC.text);
+                                  },
+                                  onButtonTwoTap: () {
+                                    HapticFeedback.lightImpact();
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const SettingsDialog();
+                                        });
+                                  },
+                                  title: "Diagnoses",
+                                  tec: diagnosesTEC,
+                                ),
+                              );
+                            }),
                             // suggested questions
-                            Visibility(
-                              visible: widget.forEditing,
-                              child: InputBox(
-                                hintColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                hintText:
-                                    "tap button to generate suggested questions",
-                                focusNode: sQFN,
-                                onButtonOneTap: () async {
-                                  HapticFeedback.lightImpact();
-                                  suggestedQuestionsTEC.text =
-                                      "generating suggested questings..........";
-                                  suggestedQuestionsTEC.text =
-                                      await AiController()
-                                          .generateSuggestedQuestions(
-                                              ref,
-                                              ref.read(patientProvider).sex,
-                                              double.parse(ageTEC.text),
-                                              ref.read(patientProvider).ageUnit,
-                                              occupationTEC.text,
-                                              hopiTEC.text,
-                                              examinationsTEC.text);
-                                },
-                                onButtonTwoTap: () {
-                                  HapticFeedback.lightImpact();
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const SettingsDialog();
-                                      });
-                                },
-                                title: "Suggested Questions",
-                                tec: suggestedQuestionsTEC,
-                              ),
-                            ),
-                            // summary of hopi
-                            Visibility(
-                              visible: widget.forEditing,
-                              child: InputBox(
-                                hintColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                hintText: "tap button to generate summary",
-                                focusNode: summaryFN,
-                                onButtonOneTap: () async {
-                                  HapticFeedback.lightImpact();
-                                  summaryTEC.text = "generating summary......";
-                                  summaryTEC.text = await AiController()
-                                      .generateSummary(
-                                          ref,
-                                          ref.read(patientProvider).sex,
-                                          double.parse(ageTEC.text),
-                                          ref.read(patientProvider).ageUnit,
-                                          occupationTEC.text,
-                                          hopiTEC.text,
-                                          examinationsTEC.text);
-                                },
-                                onButtonTwoTap: () {
-                                  HapticFeedback.lightImpact();
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const SettingsDialog();
-                                      });
-                                },
-                                title: "Summary",
-                                tec: summaryTEC,
-                              ),
-                            ),
+                            Consumer(builder: (context, ref, child) {
+                              // ignore: unused_local_variable
+                              var localvar = ref.watch(updateOnGenerate);
+                              return Visibility(
+                                visible: widget.forEditing &&
+                                    suggestedQuestionsTEC.text != "",
+                                child: InputBox(
+                                  hintColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  hintText:
+                                      "tap button to generate suggested questions",
+                                  focusNode: sQFN,
+                                  onButtonOneTap: () async {
+                                    HapticFeedback.lightImpact();
+                                    suggestedQuestionsTEC.text =
+                                        "generating suggested questings..........";
+                                    suggestedQuestionsTEC.text =
+                                        await AiController()
+                                            .generateSuggestedQuestions(
+                                                ref,
+                                                ref.read(patientProvider).sex,
+                                                double.parse(ageTEC.text),
+                                                ref
+                                                    .read(patientProvider)
+                                                    .ageUnit,
+                                                occupationTEC.text,
+                                                hopiTEC.text,
+                                                examinationsTEC.text);
+                                  },
+                                  onButtonTwoTap: () {
+                                    HapticFeedback.lightImpact();
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const SettingsDialog();
+                                        });
+                                  },
+                                  title: "Suggested Questions",
+                                  tec: suggestedQuestionsTEC,
+                                ),
+                              );
+                            }),
                             // suggested treatment
-                            Visibility(
-                              visible: widget.forEditing,
-                              child: InputBox(
-                                hintColor:
-                                    Theme.of(context).colorScheme.secondary,
-                                hintText: "tap button to generate treatment",
-                                focusNode: treatmentFN,
-                                onButtonOneTap: () async {
-                                  HapticFeedback.lightImpact();
-                                  suggestedTreatmentTEC.text =
-                                      "generating suggested treatment/management........";
-                                  suggestedTreatmentTEC.text =
-                                      await AiController().generateTreatments(
-                                          ref,
-                                          ref.read(patientProvider).sex,
-                                          double.parse(ageTEC.text),
-                                          ref.read(patientProvider).ageUnit,
-                                          occupationTEC.text,
-                                          hopiTEC.text,
-                                          examinationsTEC.text);
-                                },
-                                onButtonTwoTap: () {
-                                  HapticFeedback.lightImpact();
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const SettingsDialog();
-                                      });
-                                },
-                                title: "Suggested Treatment",
-                                tec: suggestedTreatmentTEC,
-                              ),
-                            ),
+                            Consumer(builder: (context, ref, child) {
+                              // ignore: unused_local_variable
+                              var localvar = ref.watch(updateOnGenerate);
+                              return Visibility(
+                                visible: widget.forEditing &&
+                                    suggestedTreatmentTEC.text != "",
+                                child: InputBox(
+                                  hintColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  hintText: "tap button to generate treatment",
+                                  focusNode: treatmentFN,
+                                  onButtonOneTap: () async {
+                                    HapticFeedback.lightImpact();
+                                    suggestedTreatmentTEC.text =
+                                        "generating suggested treatment/management........";
+                                    suggestedTreatmentTEC.text =
+                                        await AiController().generateTreatments(
+                                            ref,
+                                            ref.read(patientProvider).sex,
+                                            double.parse(ageTEC.text),
+                                            ref.read(patientProvider).ageUnit,
+                                            occupationTEC.text,
+                                            hopiTEC.text,
+                                            examinationsTEC.text);
+                                  },
+                                  onButtonTwoTap: () {
+                                    HapticFeedback.lightImpact();
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const SettingsDialog();
+                                        });
+                                  },
+                                  title: "Suggested Treatment",
+                                  tec: suggestedTreatmentTEC,
+                                ),
+                              );
+                            }),
+                            // summary of hopi
+                            Consumer(builder: (context, ref, child) {
+                              // ignore: unused_local_variable
+                              var localvar = ref.watch(updateOnGenerate);
+                              return Visibility(
+                                visible:
+                                    widget.forEditing && summaryTEC.text != "",
+                                child: InputBox(
+                                  hintColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  hintText: "tap button to generate summary",
+                                  focusNode: summaryFN,
+                                  onButtonOneTap: () async {
+                                    HapticFeedback.lightImpact();
+                                    summaryTEC.text =
+                                        "generating summary......";
+                                    summaryTEC.text = await AiController()
+                                        .generateSummary(
+                                            ref,
+                                            ref.read(patientProvider).sex,
+                                            double.parse(ageTEC.text),
+                                            ref.read(patientProvider).ageUnit,
+                                            occupationTEC.text,
+                                            hopiTEC.text,
+                                            examinationsTEC.text);
+                                  },
+                                  onButtonTwoTap: () {
+                                    HapticFeedback.lightImpact();
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const SettingsDialog();
+                                        });
+                                  },
+                                  title: "Summary",
+                                  tec: summaryTEC,
+                                ),
+                              );
+                            }),
                             const SizedBox(
                               height: 200,
                             )
