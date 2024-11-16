@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:realm/realm.dart';
 import 'package:sage/ai/ai_controller.dart';
 import 'package:sage/components/ageunitdropdownmenu.dart';
+import 'package:sage/components/confirm_dialog.dart';
 import 'package:sage/components/inputbox.dart';
 import 'package:sage/components/settings_dialog.dart';
 import 'package:sage/components/sexdropdownmenu.dart';
@@ -18,7 +19,7 @@ import 'package:sage/layouts/base_layout.dart';
 
 final updateTagsListUi = StateProvider((ref) => true);
 final updateOnGenerate = StateProvider((ref) => true);
-final includeExaminations = StateProvider((state)=> false);
+final includeExaminations = StateProvider((state) => false);
 
 class PatientPageLayout extends StatefulWidget {
   final bool forEditing;
@@ -212,7 +213,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
               print("notsame");
             }
           }
-          ref.read(includeExaminations.notifier).update((state)=>false);
+          ref.read(includeExaminations.notifier).update((state) => false);
         },
         child: LayoutBuilder(builder: (contex, constraints) {
           double width = constraints.maxWidth;
@@ -257,11 +258,36 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                                   child: GestureDetector(
                                       onTap: () {
                                         HapticFeedback.lightImpact();
-                                        ref
-                                            .read(patientDatabaseProvider
-                                                .notifier)
-                                            .deletePatient(patient);
-                                        Navigator.pop(context);
+
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return ConfirmDialog(
+                                                title: "Delete",
+                                                description:
+                                                    "Are you sure you want to delete?",
+                                                onTap: () {
+                                                  HapticFeedback.lightImpact();
+                                                  ref
+                                                      .read(
+                                                          patientDatabaseProvider
+                                                              .notifier)
+                                                      .deletePatient(patient);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: const Text(
+                                                      "Deleted",
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.red[100],
+                                                  ));
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                              );
+                                            });
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.all(8.0),
@@ -741,43 +767,57 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                               ),
                             ),
                             // include examinations button
-                            Consumer(
-                              builder: (context, ref, child) {
-                                return Visibility(
-                                  visible: ref.watch(includeExaminations) == false && examinationsTEC.text == "" && widget.forEditing,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      HapticFeedback.lightImpact();
-          ref.read(includeExaminations.notifier).update((state)=>true);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Flex(
-                                        direction: Axis.horizontal,
-                                        children: [
-                                          Icon(Icons.add_box_rounded, color: Theme.of(context).colorScheme.primary,),
-                                          const SizedBox(width: 5,),
-                                          Text(
-                                            "Include Examinations (Optional)",
-                                            style: TextStyle(
-                                                color:
-                                                    Theme.of(context).colorScheme.primary,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 18),
-                                          )
-                                        ],
-                                      ),
+                            Consumer(builder: (context, ref, child) {
+                              return Visibility(
+                                visible:
+                                    ref.watch(includeExaminations) == false &&
+                                        examinationsTEC.text == "" &&
+                                        widget.forEditing,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.lightImpact();
+                                    ref
+                                        .read(includeExaminations.notifier)
+                                        .update((state) => true);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Flex(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Icon(
+                                          Icons.add_box_rounded,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "Include Examinations (Optional)",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18),
+                                        )
+                                      ],
                                     ),
                                   ),
-                                );
-                              }
-                            ),
+                                ),
+                              );
+                            }),
                             // examinations
                             Consumer(builder: (context, ref, child) {
                               // ignore: unused_local_variable
                               var localvar = ref.watch(updateOnGenerate);
                               return Visibility(
-                                visible: ref.watch(includeExaminations) == true || examinationsTEC.text != "" && widget.forEditing,
+                                visible:
+                                    ref.watch(includeExaminations) == true ||
+                                        examinationsTEC.text != "" &&
+                                            widget.forEditing,
                                 child: InputBox(
                                   hintColor:
                                       Theme.of(context).colorScheme.secondary,
