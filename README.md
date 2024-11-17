@@ -1,6 +1,6 @@
 # **Sage - Your AI-Powered Medical Assistant**
 
-![Hero image](mock.png)
+<img src="mock.png" width="48">
 
 Sage is an AI-powered app designed to assist medical students in taking comprehensive and structured patient histories. It provides guided questions, organizes data efficiently, and helps streamline the clinical assessment process.
 
