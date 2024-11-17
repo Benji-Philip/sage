@@ -10,7 +10,7 @@ This app was developed and tested on Android. However, since it’s built with F
 
 ## Features
 
-[![screenshot for generations](https://drive.google.com/file/d/1X6baGHaFkC33VzCScw0zd5JEPdlAY4JG/view?usp=drive_link)]
+![screenshot showing generations for diagnoses](Screenshot_1731673173.png)
 
 - Generate
     - Diagnoses
