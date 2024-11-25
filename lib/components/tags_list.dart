@@ -97,8 +97,14 @@ class _TagsListState extends ConsumerState<TagsList> {
                       const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                   child: IntrinsicWidth(
                     child: TextFormField(
+                      cursorColor: Theme.of(context).colorScheme.onTertiary,
                       onFieldSubmitted: widget.onFieldSubmitted,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                          height: 0.70,
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.w700),
                           isDense: true,
                           border: InputBorder.none,
                           hintText: "+ add tag"),

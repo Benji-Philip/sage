@@ -39,7 +39,7 @@ class _DropDownMenuButtonState extends ConsumerState<DropDownMenuButtonLayout> {
           onTap: () {
             HapticFeedback.lightImpact();
           },
-          dropdownColor: Theme.of(context).colorScheme.onSurface,
+          dropdownColor: Theme.of(context).colorScheme.onTertiary,
           borderRadius: const BorderRadius.all(Radius.circular(25)),
           elevation: 4,
           underline: Container(

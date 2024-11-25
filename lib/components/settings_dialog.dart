@@ -43,7 +43,7 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
           children: [
             Container(
               decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: Theme.of(context).colorScheme.onTertiary,
                   borderRadius: const BorderRadius.all(Radius.circular(18)),
                   boxShadow: [
                     BoxShadow(
@@ -104,7 +104,7 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
                                               .value ==
                                           "gemini"
                                       ? null
-                                      : Theme.of(context).colorScheme.onSurface,
+                                      : Theme.of(context).colorScheme.onTertiary,
                                 ),
                               ),
                               Visibility(
@@ -170,7 +170,7 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
                                             .value ==
                                         "chatgpt"
                                     ? null
-                                    : Theme.of(context).colorScheme.onSurface,
+                                    : Theme.of(context).colorScheme.onTertiary,
                               ),
                               Visibility(
                                   visible: ref
@@ -223,7 +223,7 @@ class _SettingsDialogState extends ConsumerState<SettingsDialog> {
                           spreadRadius: 1)
                     ],
                     borderRadius: const BorderRadius.all(Radius.circular(100)),
-                    color: Theme.of(context).colorScheme.onSurface),
+                    color: Theme.of(context).colorScheme.onTertiary),
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Container(

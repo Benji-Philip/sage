@@ -18,7 +18,7 @@ class ConfirmDialog extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.all(Radius.circular(12))),
+              borderRadius: const BorderRadius.all(Radius.circular(12))),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -39,7 +39,7 @@ class ConfirmDialog extends StatelessWidget {
                     fontWeight: FontWeight.w300,
                     fontSize: 16),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(height: 20,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -52,7 +52,7 @@ class ConfirmDialog extends StatelessWidget {
                           borderRadius: const BorderRadius.all(
                             Radius.circular(12),
                           ),
-                          color: Theme.of(context).colorScheme.onSurface,
+                          color: Theme.of(context).colorScheme.onTertiary,
                           boxShadow: [
                             BoxShadow(
                                 offset: const Offset(0, 5),
