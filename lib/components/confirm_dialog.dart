@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ConfirmDialog extends StatelessWidget {
-  final Function() onTap;
+  final Function() onConfirm;
   final String title;
   final String description;
+  final String confirmButtonText;
   const ConfirmDialog({
     super.key,
     required this.title,
     required this.description,
-    required this.onTap,
+    required this.onConfirm,
+    required this.confirmButtonText,
   });
 
   @override
@@ -78,7 +80,7 @@ class ConfirmDialog extends StatelessWidget {
                   ),
               const SizedBox(width: 15,),
                   GestureDetector(
-                    onTap: onTap,
+                    onTap: onConfirm,
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
@@ -95,12 +97,12 @@ class ConfirmDialog extends StatelessWidget {
                                 blurRadius: 10,
                                 spreadRadius: 1)
                           ]),
-                      child: const Padding(
+                      child: Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         child: Text(
-                          "Delete",
-                          style: TextStyle(
+                          confirmButtonText,
+                          style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                               fontSize: 16),

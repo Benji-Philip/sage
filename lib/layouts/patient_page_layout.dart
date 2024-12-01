@@ -143,6 +143,42 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
       String suggestedTreatment = patient.suggestedTreatment;
       suggestedTreatmentTEC.text = suggestedTreatment;
 
+      void checkIfPatientDetailsAreSaved(){
+        if (widget.forEditing) {
+          Patient patient = Patient(
+                id,
+                jsonEncode(tags),
+                nameTEC.text,
+                double.parse(ageTEC.text),
+                ref.read(patientProvider).ageUnit,
+                ref.read(patientProvider).sex,
+                occupationTEC.text,
+                addressTEC.text,
+                chiefComplaintsTEC.text,
+                hopiTEC.text,
+                examinationsTEC.text,
+                diagnosesTEC.text,
+                summaryTEC.text,
+                suggestedQuestionsTEC.text,
+                previousSaves,
+                suggestedTreatmentTEC.text);
+          Patient? patientToCheck = ref.read(patientDatabaseProvider.notifier).getPatient(id);
+          if (ref.read(patientDatabaseProvider.notifier).isPatientInfoSaved(patient, patientToCheck)) {
+            Navigator.pop(context);
+          }else{
+            showDialog(context: context, builder: (BuildContext context){
+              return ConfirmDialog(confirmButtonText: "Exit",title: "You've made changes", description: "Are you sure you want to exit without saving?", onConfirm: (){
+              HapticFeedback.lightImpact();
+              Navigator.pop(context);
+              Navigator.pop(context);
+            });
+            });
+          }
+        } else {
+          Navigator.pop(context);
+        }
+      }
+
       void savePatientDetails() {
         if (formKey.currentState!.validate()) {
           Patient patientToAdd = Patient(
@@ -166,7 +202,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
             ref
                 .read(patientDatabaseProvider.notifier)
                 .updatePatient(patientToAdd);
-
+    
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
                 "Saved!",
@@ -197,24 +233,16 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
           ));
         }
       }
-
+    
       return PopScope(
-        onPopInvokedWithResult: (didPop, result) {
-          if (ref
-                  .read(patientDatabaseProvider.notifier)
-                  .getPatient(patient.id) !=
-              null) {
-            if (patient ==
-                ref
-                    .read(patientDatabaseProvider.notifier)
-                    .getPatient(patient.id)) {
-              print("same");
-            } else {
-              print("notsame");
-            }
-          }
-          ref.read(includeExaminations.notifier).update((state) => false);
-        },
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
+        HapticFeedback.lightImpact();
+        checkIfPatientDetailsAreSaved();
+      },
         child: LayoutBuilder(builder: (contex, constraints) {
           double width = constraints.maxWidth;
           return BaseLayout(
@@ -245,7 +273,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                                 GestureDetector(
                                     onTap: () {
                                       HapticFeedback.lightImpact();
-                                      Navigator.pop(context);
+                                      checkIfPatientDetailsAreSaved();
                                     },
                                     child: const Padding(
                                       padding: EdgeInsets.only(
@@ -258,15 +286,15 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                                   child: GestureDetector(
                                       onTap: () {
                                         HapticFeedback.lightImpact();
-
+    
                                         showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return ConfirmDialog(
+                                              return ConfirmDialog(confirmButtonText: "Delete",
                                                 title: "Delete",
                                                 description:
                                                     "Are you sure you want to delete?",
-                                                onTap: () {
+                                                onConfirm: () {
                                                   HapticFeedback.lightImpact();
                                                   ref
                                                       .read(

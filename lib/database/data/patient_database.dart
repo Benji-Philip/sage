@@ -35,6 +35,14 @@ class PatientDataBaseNotifier extends StateNotifier<List<Patient>> {
     return realm.find<Patient>(id);
   }
 
+  // has the patient info been saved ?
+  bool isPatientInfoSaved (Patient patient, Patient? patientToCheck){
+    if (patientToCheck != null) {
+      return patient.toEJson().toString() == patientToCheck.toEJson().toString();
+    }
+    return false;
+  }
+
   // create
   void createPatient(Patient patient) {
     realm.write(() {
