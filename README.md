@@ -45,7 +45,3 @@ This app was developed and tested on Android. However, since it’s built with F
 OR
 
 - OPENAI(ChatGPT) API key
-
-## Visit for more information:-
-
-https://bytesizeben.com/sage
