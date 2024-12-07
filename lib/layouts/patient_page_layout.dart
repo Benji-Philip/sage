@@ -885,8 +885,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                               // ignore: unused_local_variable
                               var localvar = ref.watch(updateOnGenerate);
                               return Visibility(
-                                visible: widget.forEditing &&
-                                    diagnosesTEC.text == "",
+                                visible: widget.forEditing && diagnosesTEC.text=="",
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: Row(
@@ -1030,7 +1029,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                                 child: InputBox(
                                   hintColor:
                                       Theme.of(context).colorScheme.secondary,
-                                  hintText: "tap button to generate diagnoses",
+                                  hintText: "..............................",
                                   focusNode: diagnosesFN,
                                   onButtonOneTap: () async {
                                     HapticFeedback.lightImpact();
@@ -1070,7 +1069,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                                   hintColor:
                                       Theme.of(context).colorScheme.secondary,
                                   hintText:
-                                      "tap button to generate suggested questions",
+                                      "..............................",
                                   focusNode: sQFN,
                                   onButtonOneTap: () async {
                                     HapticFeedback.lightImpact();
@@ -1112,7 +1111,7 @@ class _PatientPageLayoutState extends State<PatientPageLayout> {
                                 child: InputBox(
                                   hintColor:
                                       Theme.of(context).colorScheme.secondary,
-                                  hintText: "tap button to generate treatment",
+                                  hintText: "..............................",
                                   focusNode: treatmentFN,
                                   onButtonOneTap: () async {
                                     HapticFeedback.lightImpact();
