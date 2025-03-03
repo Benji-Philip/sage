@@ -17,6 +17,7 @@ class _Patient {
   late String chiefComplaints;
   late String hopi;
   late String examinations;
+  late String investigations;
   late String diagnoses;
   late String summaryOfHopi;
   late String suggestedQuestions;

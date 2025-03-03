@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:realm/realm.dart';
 import 'package:sage/components/patient_card.dart';
 import 'package:sage/components/searchbar.dart';
 import 'package:sage/components/settings_dialog.dart';
 import 'package:sage/database/data/patient_database.dart';
 import 'package:sage/database/data/settings_database.dart';
 import 'package:sage/database/models/patient.dart';
-import 'package:sage/database/test_data/template_patient.dart';
 import 'package:sage/database/test_data/temporary_patient.dart';
 import 'package:sage/layouts/base_layout.dart';
-import 'package:sage/pages/add_patient_page.dart';
+import 'package:sage/layouts/patient_page_layout.dart';
+import 'package:sage/pages/edit_patient_page.dart';
 
 final updateSearch = StateProvider((state) => true);
 
@@ -45,11 +46,19 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
+            ref.read(forAddingProvider.notifier).update((state)=>true);
+            ref.read(includeExaminations.notifier).update((state)=>false);
+            ref.read(includeInvestigations.notifier).update((state)=>false);
+            Patient patientToAdd = Patient(ObjectId(), '[]', "", 22, 0, "M", "",
+                "", "", "", "", "", "", "", "", "", "");
+            ref
+                .read(patientDatabaseProvider.notifier)
+                .createPatient(patientToAdd);
             TemporaryPatient()
-                .updateTemporaryPatientProvider(ref, ref.read(templatePatient));
+                .updateTemporaryPatientProvider(ref, patientToAdd);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AddPatientPage()),
+              MaterialPageRoute(builder: (context) => const EditPatientPage(forAdding: true,)),
             );
           }),
       children: [
@@ -145,6 +154,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         patients[index].chiefComplaints,
                         patients[index].hopi,
                         patients[index].examinations,
+                        patients[index].investigations,
                         patients[index].diagnoses,
                         patients[index].summaryOfHopi,
                         patients[index].suggestedQuestions,

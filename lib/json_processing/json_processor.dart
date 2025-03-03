@@ -2,13 +2,13 @@ import 'dart:convert';
 
 class JsonProcessor {
   
-  List<String> jsonToTags(String tagsJson){
-    List temp = jsonDecode(tagsJson);
-    List<String> decodedTagsList  = [];
+  List<String> jsonToList(String stringJson){
+    List temp = jsonDecode(stringJson);
+    List<String> decodedList  = [];
     for (var element in temp) {
-      decodedTagsList.add("$element");
+      decodedList.add("$element");
     }
-    return decodedTagsList;
+    return decodedList;
   }
 
 }

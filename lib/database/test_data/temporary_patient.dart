@@ -4,21 +4,22 @@ import 'package:sage/database/models/patient.dart';
 
 final temporaryPatient = StateProvider((ref) => Patient(
     ObjectId(),
-    "tags",
-    "John Doe",
+    '[]',
+    "",
     22,
     0,
     "M",
-    "occupation",
-    "address",
-    "chiefComplaints",
-    "hopi",
-    "examinations",
-    "diagnoses",
-    "summaryOfHopi",
-    "suggestedQuestions",
-    "previousSaves",
-    "crudeInput"));
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""));
 
 class TemporaryPatient {
   void updateTemporaryPatientProvider(WidgetRef ref, Patient patient){

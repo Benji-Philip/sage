@@ -20,6 +20,7 @@ class Patient extends _Patient with RealmEntity, RealmObjectBase, RealmObject {
     String chiefComplaints,
     String hopi,
     String examinations,
+    String investigations,
     String diagnoses,
     String summaryOfHopi,
     String suggestedQuestions,
@@ -37,6 +38,7 @@ class Patient extends _Patient with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'chiefComplaints', chiefComplaints);
     RealmObjectBase.set(this, 'hopi', hopi);
     RealmObjectBase.set(this, 'examinations', examinations);
+    RealmObjectBase.set(this, 'investigations', investigations);
     RealmObjectBase.set(this, 'diagnoses', diagnoses);
     RealmObjectBase.set(this, 'summaryOfHopi', summaryOfHopi);
     RealmObjectBase.set(this, 'suggestedQuestions', suggestedQuestions);
@@ -108,6 +110,13 @@ class Patient extends _Patient with RealmEntity, RealmObjectBase, RealmObject {
       RealmObjectBase.set(this, 'examinations', value);
 
   @override
+  String get investigations =>
+      RealmObjectBase.get<String>(this, 'investigations') as String;
+  @override
+  set investigations(String value) =>
+      RealmObjectBase.set(this, 'investigations', value);
+
+  @override
   String get diagnoses =>
       RealmObjectBase.get<String>(this, 'diagnoses') as String;
   @override
@@ -165,6 +174,7 @@ class Patient extends _Patient with RealmEntity, RealmObjectBase, RealmObject {
       'chiefComplaints': chiefComplaints.toEJson(),
       'hopi': hopi.toEJson(),
       'examinations': examinations.toEJson(),
+      'investigations': investigations.toEJson(),
       'diagnoses': diagnoses.toEJson(),
       'summaryOfHopi': summaryOfHopi.toEJson(),
       'suggestedQuestions': suggestedQuestions.toEJson(),
@@ -189,6 +199,7 @@ class Patient extends _Patient with RealmEntity, RealmObjectBase, RealmObject {
         'chiefComplaints': EJsonValue chiefComplaints,
         'hopi': EJsonValue hopi,
         'examinations': EJsonValue examinations,
+        'investigations': EJsonValue investigations,
         'diagnoses': EJsonValue diagnoses,
         'summaryOfHopi': EJsonValue summaryOfHopi,
         'suggestedQuestions': EJsonValue suggestedQuestions,
@@ -207,6 +218,7 @@ class Patient extends _Patient with RealmEntity, RealmObjectBase, RealmObject {
           fromEJson(chiefComplaints),
           fromEJson(hopi),
           fromEJson(examinations),
+          fromEJson(investigations),
           fromEJson(diagnoses),
           fromEJson(summaryOfHopi),
           fromEJson(suggestedQuestions),
@@ -232,6 +244,7 @@ class Patient extends _Patient with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('chiefComplaints', RealmPropertyType.string),
       SchemaProperty('hopi', RealmPropertyType.string),
       SchemaProperty('examinations', RealmPropertyType.string),
+      SchemaProperty('investigations', RealmPropertyType.string),
       SchemaProperty('diagnoses', RealmPropertyType.string),
       SchemaProperty('summaryOfHopi', RealmPropertyType.string),
       SchemaProperty('suggestedQuestions', RealmPropertyType.string),

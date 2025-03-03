@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:realm/realm.dart';
 import 'package:sage/database/models/patient.dart';
+import 'package:sage/json_processing/json_processor.dart';
 
 final patientDatabaseProvider =
     StateNotifierProvider<PatientDataBaseNotifier, List<Patient>>(
@@ -78,5 +81,18 @@ class PatientDataBaseNotifier extends StateNotifier<List<Patient>> {
       },
     );
     updateState();
+  }
+
+  // save previous patient info for undoing generations in case of error
+  void saveAsPrevious(Patient patient){
+    List temp = JsonProcessor().jsonToList(patient.previousSaves);
+    temp.add(patient);
+    patient.previousSaves = jsonEncode(temp);
+    updatePatient(patient);
+  }
+
+  // undo
+  void undoGeneration(){
+      
   }
 }

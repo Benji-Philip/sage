@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final tagsListIndex = StateProvider((ref) => 0);
 
 class TagsList extends ConsumerStatefulWidget {
+  final FocusNode? focusNode;
   final Function()? onTap;
   final Function? onLongPress;
   final Function(String?)? onFieldSubmitted;
@@ -21,6 +22,7 @@ class TagsList extends ConsumerStatefulWidget {
     this.onFieldSubmitted,
     this.onLongPress,
     this.onTap,
+    this.focusNode,
   });
 
   @override
@@ -28,6 +30,7 @@ class TagsList extends ConsumerStatefulWidget {
 }
 
 class _TagsListState extends ConsumerState<TagsList> {
+
   @override
   Widget build(BuildContext context) {
     List<Widget> tagsWidgets = List.generate(
@@ -51,14 +54,14 @@ class _TagsListState extends ConsumerState<TagsList> {
                     blurRadius: 10,
                     spreadRadius: 1)
               ],
-              color: Theme.of(context).colorScheme.tertiary,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: const BorderRadius.all(Radius.circular(100))),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
             child: Text(
               widget.tags[index],
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.surface,
                   fontWeight: FontWeight.w700),
             ),
           ),
@@ -90,20 +93,21 @@ class _TagsListState extends ConsumerState<TagsList> {
                           blurRadius: 10,
                           spreadRadius: 1)
                     ],
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.tertiary,
                     borderRadius: const BorderRadius.all(Radius.circular(100))),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
                   child: IntrinsicWidth(
                     child: TextFormField(
-                      cursorColor: Theme.of(context).colorScheme.onTertiary,
+                      focusNode: widget.focusNode,
+                      cursorColor: Theme.of(context).colorScheme.primary,
                       onFieldSubmitted: widget.onFieldSubmitted,
                       decoration: InputDecoration(
                         hintStyle: TextStyle(
                           height: 0.70,
                           fontSize: 16,
-                          color: Theme.of(context).colorScheme.tertiary,
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w700),
                           isDense: true,
                           border: InputBorder.none,
@@ -112,7 +116,7 @@ class _TagsListState extends ConsumerState<TagsList> {
                       style: TextStyle(
                           height: 0.70,
                           fontSize: 16,
-                          color: Theme.of(context).colorScheme.tertiary,
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w700),
                     ),
                   ),
